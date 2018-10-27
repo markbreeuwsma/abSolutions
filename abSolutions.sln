@@ -3,7 +3,25 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2048
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolsAndUtilities", "ToolsAndUtilities\ToolsAndUtilities.csproj", "{433AF7E0-9838-4D0D-9301-03359005CD8A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolsAndUtilitiesTest", "ToolsAndUtilitiesTest\ToolsAndUtilitiesTest.csproj", "{EC18F1AD-AF7C-4142-8B9A-5E398B44D8E0}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{433AF7E0-9838-4D0D-9301-03359005CD8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{433AF7E0-9838-4D0D-9301-03359005CD8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{433AF7E0-9838-4D0D-9301-03359005CD8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{433AF7E0-9838-4D0D-9301-03359005CD8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC18F1AD-AF7C-4142-8B9A-5E398B44D8E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC18F1AD-AF7C-4142-8B9A-5E398B44D8E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC18F1AD-AF7C-4142-8B9A-5E398B44D8E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC18F1AD-AF7C-4142-8B9A-5E398B44D8E0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
