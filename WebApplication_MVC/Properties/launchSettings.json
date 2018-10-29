@@ -23,8 +23,5 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     }
-  },
-  "ConnectionStrings": {
-    "abSolutionsDatabase": "Server=(localdb)\\SQLExpress;Database=abSolutions;Trusted_Connection=True;"
   }
 }

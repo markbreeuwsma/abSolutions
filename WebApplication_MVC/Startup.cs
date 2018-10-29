@@ -17,12 +17,13 @@ namespace WebApplication_MVC
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -38,11 +39,12 @@ namespace WebApplication_MVC
 
             // Setup dependency injection of the correct DbContext so it can be injected into the controlers,
             // allowing for a generic setup and control of the scope of the DbContext by the container.
-            // The connectionstring is setup in the launchSettings.json file under that names property.
+            // The connectionstring is setup in the appsettings.json file under that names property.
             var connection = Configuration.GetConnectionString("abSolutionsDatabase");
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(connection));
         }
 
+        
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
