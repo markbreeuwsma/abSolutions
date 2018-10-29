@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolsAndUtilities", "ToolsA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolsAndUtilitiesTest", "ToolsAndUtilitiesTest\ToolsAndUtilitiesTest.csproj", "{EC18F1AD-AF7C-4142-8B9A-5E398B44D8E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication_MVC", "WebApplication_MVC\WebApplication_MVC.csproj", "{D35D2E9D-E41C-4774-8C19-86BB82BF7F17}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplication_MVC", "WebApplication_MVC\WebApplication_MVC.csproj", "{D35D2E9D-E41C-4774-8C19-86BB82BF7F17}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseModel", "DatabaseModel\DatabaseModel.csproj", "{E6ECECBC-E43C-4137-9E6F-A2DEE237EC31}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{D35D2E9D-E41C-4774-8C19-86BB82BF7F17}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D35D2E9D-E41C-4774-8C19-86BB82BF7F17}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D35D2E9D-E41C-4774-8C19-86BB82BF7F17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6ECECBC-E43C-4137-9E6F-A2DEE237EC31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6ECECBC-E43C-4137-9E6F-A2DEE237EC31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6ECECBC-E43C-4137-9E6F-A2DEE237EC31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6ECECBC-E43C-4137-9E6F-A2DEE237EC31}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
