@@ -6,10 +6,25 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication_MVC.Models;
 
+using DatabaseModel;
+
 namespace WebApplication_MVC.Controllers
 {
     public class HomeController : Controller
     {
+        // The DbContext is passed on from the container processing the web application and this way regulates
+        // the scope of the context, improving maintainability and testing options. It is saved in a private 
+        // field from the constructor so all other methods can make use of it. See startup.cs for the setup.
+        // An injected DbContext might also be accesses in the following manner (although uncommon)
+        //  - using (var context = serviceProvider.GetService<DatabaseContext>()) { ... }
+        private readonly DatabaseContext _context;
+
+        public HomeController(DatabaseContext context)
+        {
+            _context = context;
+        }
+
+
         public IActionResult Index()
         {
             return View();
