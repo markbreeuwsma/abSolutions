@@ -14,6 +14,7 @@ namespace DatabaseModel
         // the [Required] data annotation attribute aids in automated model validation on web application
         // the [Display(Name="")] data annotation attribute allows for an alias of a property name for presentation on a web application
 
+        [Key]
         public int BlogId { get; set; }
         [Required]
         [Display(Name = "Description")]

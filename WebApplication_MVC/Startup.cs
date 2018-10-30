@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 
 using DatabaseModel;
@@ -46,7 +47,7 @@ namespace WebApplication_MVC
 
         
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -68,6 +69,19 @@ namespace WebApplication_MVC
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            // Migrate (and seed) the database during startup. Must be synchronous.
+            using (var serviceScope = app.ApplicationServices
+                                         .GetRequiredService<IServiceScopeFactory>()
+                                         .CreateScope())
+            {
+                serviceScope.ServiceProvider.GetService<DatabaseContext>().Database.Migrate();
+                //serviceScope.ServiceProvider.GetService<ISeedService>().SeedDatabase().Wait();
+            }
+
+            // http://docs.identityserver.io/en/release/quickstarts/8_entity_framework.html?highlight=entity#database-schema-changes-and-using-ef-migrations
+
+            // https://stackoverflow.com/questions/36265827/entity-framework-automatic-apply-migrations?noredirect=1&lq=1
         }
     }
 }
