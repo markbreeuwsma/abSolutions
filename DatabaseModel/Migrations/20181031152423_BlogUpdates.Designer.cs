@@ -4,14 +4,16 @@ using DatabaseModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DatabaseModel.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20181031152423_BlogUpdates")]
+    partial class BlogUpdates
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,8 +45,7 @@ namespace DatabaseModel.Migrations
 
                     b.HasKey("BlogId");
 
-                    b.HasIndex("Created", "BlogId")
-                        .IsUnique();
+                    b.HasIndex("Created", "BlogId");
 
                     b.ToTable("Blogs");
                 });

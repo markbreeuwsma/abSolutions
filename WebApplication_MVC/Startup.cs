@@ -42,7 +42,8 @@ namespace WebApplication_MVC
             // allowing for a generic setup and control of the scope of the DbContext by the container.
             // The connectionstring is setup in the appsettings.json file under that names property.
             var connection = Configuration.GetConnectionString("abSolutionsDatabase");
-            services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(connection));
+            services.AddDbContext<DatabaseContext>(options => options.UseLazyLoadingProxies()
+                                                                     .UseSqlServer(connection));
         }
 
         
@@ -70,7 +71,7 @@ namespace WebApplication_MVC
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            // Migrate (and seed) the database during startup. Must be synchronous.
+            // Migrate (and possibly seed) the database during startup. Must be synchronous.
             using (var serviceScope = app.ApplicationServices
                                          .GetRequiredService<IServiceScopeFactory>()
                                          .CreateScope())
@@ -78,10 +79,6 @@ namespace WebApplication_MVC
                 serviceScope.ServiceProvider.GetService<DatabaseContext>().Database.Migrate();
                 //serviceScope.ServiceProvider.GetService<ISeedService>().SeedDatabase().Wait();
             }
-
-            // http://docs.identityserver.io/en/release/quickstarts/8_entity_framework.html?highlight=entity#database-schema-changes-and-using-ef-migrations
-
-            // https://stackoverflow.com/questions/36265827/entity-framework-automatic-apply-migrations?noredirect=1&lq=1
         }
     }
 }
