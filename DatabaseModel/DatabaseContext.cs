@@ -25,7 +25,7 @@ namespace DatabaseModel
         // to a specific migrationname if passed). In this project this call is not needed, since
         // the startup.cs file is setup for automatic migration where needed.
         // The PM command prompt consists of a few more commands for migration back and forth and 
-        // debugging purposes. Check online if needed.
+        // debugging purposes. Check online documentation if needed.
 
         // Connection string "Server=xxx\\SQLExpress;Database=abSolutions;Trusted_Connection=True;"
         // works when replacing xxx with 'localhost' or 'HOME' (pc-name), NOT '(localdb)' !!!
@@ -35,6 +35,8 @@ namespace DatabaseModel
         // Lazy loading was not supported in EF Core 2.0 like in EF 6, but added in 2.1 all-be-it 
         // by the use of a new NuGet package Microsoft.EntityFrameworkCore.Proxies and setting an
         // additional option 'UseLazyLoading' when setting the context up in startup.cs to activate.
+        // However, then all entity types need to be public, unsealed and virtual, even if you don't
+        // want lazy loading, so not optimal yet.
 
 
         // Passing on the DbContextOptions allows for dependency injection which helps with setting up 
@@ -88,9 +90,94 @@ namespace DatabaseModel
             // Mapping many-to-many connections can only be done by adding a new entity class which holds properties for
             // the keys of both classes to link together, sets up a composite primairy key for the new class and then 
             // setup two one-to-many mappings from that new entity class to the original classes (check documentation)
+
+            modelBuilder.Entity<Address>()
+                        .Property(x => x.CountryId)
+                        .HasMaxLength(2);
+
+            modelBuilder.Entity<Contact>()
+                        .Property(x => x.Created)
+                        .ValueGeneratedOnAdd();
+            modelBuilder.Entity<Contact>()
+                        .Property(x => x.LastUpdated)
+                        .ValueGeneratedOnUpdate();
+            modelBuilder.Entity<Contact>()
+                        .Property(x => x.RowVersion)
+                        .IsRowVersion();
+
+            modelBuilder.Entity<Address>()
+                        .HasOne<Contact>(x => x.VisitingAddressContact)
+                        .WithOne(x => x.VisitingAddress)
+                        .HasForeignKey<Contact>(x => x.VisitingAddressId)
+                        .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Address>()
+                        .HasOne<Contact>(x => x.PostalAddressContact)
+                        .WithOne(x => x.PostalAddress)
+                        .HasForeignKey<Contact>(x => x.PostalAddressId)
+                        .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Contact>()
+                        .HasMany<Address>(x => x.DeliveryAddresses)
+                        .WithOne(x => x.DeliveryAddressContact)
+                        .HasForeignKey(x => x.DeliveryAddressContactId)
+                        .OnDelete(DeleteBehavior.Restrict);
+
+            //modelBuilder.Entity<Contact>()
+            //            .OwnsOne<Address>(x => x.VisitingAddress);
+            //modelBuilder.Entity<Contact>()
+            //            .OwnsOne<Address>(x => x.PostalAddress);
+
+            modelBuilder.Entity<Country>()
+                        .Property(x => x.CountryId)
+                        .ValueGeneratedNever()
+                        .HasMaxLength(2);
+
+            modelBuilder.Entity<CountryDescription>()
+                        .Property(x => x.CountryId)
+                        .HasMaxLength(2)
+                        .IsRequired();
+            modelBuilder.Entity<CountryDescription>()
+                        .Property(x => x.LanguageId)
+                        .HasMaxLength(3)
+                        .IsRequired();
+            modelBuilder.Entity<CountryDescription>()
+                        .Property(x => x.Description)
+                        .HasMaxLength(80)
+                        .IsRequired();
+            modelBuilder.Entity<CountryDescription>()
+                        .HasKey(x => new { x.CountryId, x.LanguageId });
+            modelBuilder.Entity<CountryDescription>()
+                        .HasIndex(x => new { x.LanguageId, x.CountryId })
+                        .IsUnique();
+            modelBuilder.Entity<CountryDescription>()
+                        .HasOne<Country>(x => x.Country)
+                        .WithMany(x => x.Descriptions)
+                        .HasForeignKey(x => x.CountryId)
+                        .OnDelete(DeleteBehavior.Cascade);
         }
 
+        // This function could be used to extend the implementation of SaveChanges to add additional
+        // processing or database requirements, e.g. generic exception logging or additional data validations
+        //public override int SaveChanges()
+        //{
+        //    foreach (var entry in ChangeTracker.Entries <...> ())
+        //    {
+        //        if (entry.State == EntityState.Modified || entry.State == EntityState.Added)
+        //        {
+        //            // Possibly check for null or if it's changed at all
+        //            entry.Entity.Name = entry.Entity.Name.ToUpper();
+        //        }
+        //    }
+        //    return base.SaveChanges();
+        //}
+
+        // Entities accessable and trackable by the context
         public virtual DbSet<Blog> Blogs { get; set; }
         public virtual DbSet<Post> Posts { get; set; }
+
+        public virtual DbSet<Contact> Contacts { get; set; }
+        public virtual DbSet<Address> Addresses { get; set; }
+        public virtual DbSet<Country> Countries { get; set; }
+        public virtual DbSet<CountryDescription> CountryDescriptions { get; set; }
+
     }
 }
