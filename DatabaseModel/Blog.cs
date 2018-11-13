@@ -12,7 +12,7 @@ namespace DatabaseModel
     // [Table("xxx"{,Schema="yyy"})] 
     //   overrules the class name with the specified name, Schema optionally overrules the default 'dbo' schema
     // [Column("xxx"{,Order=nnn}{,TypeName="yyy"})]
-    //   overrules the property name with the specified name, Order optionally overrules the order of the fields in a db record (must be used on all properties), TypeName optionally overrules the implicite type of the field in a db record
+    //   overrules the property name with the specified name, Order optionally overrules the order of the fields in a db record (must be used on all properties, not supported in EF core yet), TypeName optionally overrules the implicite type of the field in a db record
     // [ForeignKey("xxx")]
     //   used if help creating a foreign key when the propertyname does not match the key property of the intended linked class (probably due to bad naming convention)
     // [InverseProperty("xxx")]

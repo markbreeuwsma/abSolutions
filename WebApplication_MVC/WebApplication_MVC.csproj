@@ -19,4 +19,22 @@
     <ProjectReference Include="..\DatabaseModel\DatabaseModel.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Views\FieldsOfInterest\Create.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\FieldsOfInterest\Delete.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\FieldsOfInterest\Details.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\FieldsOfInterest\Edit.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\FieldsOfInterest\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+  </ItemGroup>
+
 </Project>

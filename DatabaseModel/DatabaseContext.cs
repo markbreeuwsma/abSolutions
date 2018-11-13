@@ -153,6 +153,44 @@ namespace DatabaseModel
                         .WithMany(x => x.Descriptions)
                         .HasForeignKey(x => x.CountryId)
                         .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<FieldOfInterest>()
+                        .Property(x => x.FieldOfInterestId)
+                        .ValueGeneratedNever()
+                        .HasMaxLength(5);
+            modelBuilder.Entity<FieldOfInterest>()
+                        .Property(x => x.Created)
+                        .ValueGeneratedOnAdd();
+            modelBuilder.Entity<FieldOfInterest>()
+                        .Property(x => x.CreatedBy)
+                        .ValueGeneratedOnAdd()
+                        .IsRequired();
+            modelBuilder.Entity<FieldOfInterest>()
+                        .Property(x => x.RowVersion)
+                        .IsRowVersion();
+
+            modelBuilder.Entity<FieldOfInterestDescription>()
+                        .Property(x => x.FieldOfInterestId)
+                        .HasMaxLength(5)
+                        .IsRequired();
+            modelBuilder.Entity<FieldOfInterestDescription>()
+                        .Property(x => x.LanguageId)
+                        .HasMaxLength(3)
+                        .IsRequired();
+            modelBuilder.Entity<FieldOfInterestDescription>()
+                        .Property(x => x.Description)
+                        .HasMaxLength(80)
+                        .IsRequired();
+            modelBuilder.Entity<FieldOfInterestDescription>()
+                        .HasKey(x => new { x.FieldOfInterestId, x.LanguageId });
+            modelBuilder.Entity<FieldOfInterestDescription>()
+                        .HasIndex(x => new { x.LanguageId, x.FieldOfInterestId })
+                        .IsUnique();
+            modelBuilder.Entity<FieldOfInterestDescription>()
+                        .HasOne<FieldOfInterest>(x => x.FieldOfInterest)
+                        .WithMany(x => x.Descriptions)
+                        .HasForeignKey(x => x.FieldOfInterestId)
+                        .OnDelete(DeleteBehavior.Cascade);
         }
 
         // This function could be used to extend the implementation of SaveChanges to add additional
@@ -176,8 +214,11 @@ namespace DatabaseModel
 
         public virtual DbSet<Contact> Contacts { get; set; }
         public virtual DbSet<Address> Addresses { get; set; }
+
         public virtual DbSet<Country> Countries { get; set; }
         public virtual DbSet<CountryDescription> CountryDescriptions { get; set; }
 
+        public virtual DbSet<FieldOfInterest> FieldsOfInterest { get; set; }
+        public virtual DbSet<FieldOfInterestDescription> FieldOfInterestDescriptions { get; set; }
     }
 }

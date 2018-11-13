@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 
 using DatabaseModel;
+using WebApplication_MVC.Models;
 
 namespace WebApplication_MVC
 {
@@ -35,6 +36,12 @@ namespace WebApplication_MVC
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+
+            // Setup dependency injection of a repository, so that controles can make use of these repositories
+            // by accepting them in the constructor, while the generic setup and control of the scope is done
+            // by the container. In turn the repository will take the below setup service for a DbContext into 
+            // their constructor and no longer in the controler itself adding to seperation of concerns.
+            services.AddScoped<ICrudRepositoryAsync<FieldOfInterestView, string>, FieldOfInterestViewRepository>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
@@ -63,12 +70,28 @@ namespace WebApplication_MVC
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-
+            
             app.UseMvc(routes =>
             {
+                // Allow for an abrieviated URL call to get to the FieldsOfInterest controller. You need
+                // to mention both controller routes and in the mentioned order, so the primairy is still
+                // used for navigation and the URL does not show FoI instead of FieldsOfInterest.
+                routes.MapRoute(
+                    name: "FieldsOfInterest (primairy)",
+                    template: "FieldsOfInterest/{action}/{id?}",
+                    defaults: new { controller = "FieldsOfInterest", action = "Index", id = "" });
+                routes.MapRoute(
+                    name: "FieldsOfInterest (alternative)",                                        
+                    template: "FoI/{action}/{id?}",                          
+                    defaults: new { controller = "FieldsOfInterest", action = "Index", id = "" });
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+
+                // URL that match the default route are for example
+                //  - http://localhost:xxxx/Country/Edit/1?languageId=EN
+                //  - http://localhost:xxxx/Country/Delete?id=1&languageId=EN
+
             });
 
             // Migrate (and possibly seed) the database during startup. Must be synchronous.

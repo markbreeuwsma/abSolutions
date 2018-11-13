@@ -52,29 +52,35 @@ namespace DatabaseModel
         public string Description { get; set; }
     }
 
-    static class DescriptionHelper
+    public static class DescriptionHelper
     {
+        public static string UserLanguageId { get { return "NL";  } }     // TODO retrieve language from user 
+        public static string SystemLanguageId { get { return "EN";  } }   // TODO retrieve language from system (localization)
+
         public static string GetDescription(IEnumerable<GeneralDescription> descriptions, out string languageId)
         {
             // TODO define fallback mechanisme
             // when showing fallback is ok, when editing, no fallback is wanted, when reporting report or contact language is wanted 
 
-            string firstLang = "NL";      // TODO retrieve language from user 
-            string secondLang = "EN";     // TODO retrieve language from system (localization)
+            string firstLang = UserLanguageId;      
+            string secondLang = SystemLanguageId;  
             string secondLangDescr = "";
 
-            using (var enumerator = descriptions.GetEnumerator())
+            if (descriptions != null)
             {
-                while (enumerator.MoveNext())
+                using (var enumerator = descriptions.GetEnumerator())
                 {
-                    if (enumerator.Current.LanguageId == firstLang)
+                    while (enumerator.MoveNext())
                     {
-                        languageId = firstLang;
-                        return enumerator.Current.Description;
-                    }
-                    if (enumerator.Current.LanguageId == secondLang)
-                    {
-                        secondLangDescr = enumerator.Current.Description;
+                        if (enumerator.Current.LanguageId == firstLang)
+                        {
+                            languageId = firstLang;
+                            return enumerator.Current.Description;
+                        }
+                        if (enumerator.Current.LanguageId == secondLang)
+                        {
+                            secondLangDescr = enumerator.Current.Description;
+                        }
                     }
                 }
             }
