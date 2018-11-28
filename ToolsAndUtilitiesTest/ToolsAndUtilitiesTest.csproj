@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ToolsAndUtilities\ToolsAndUtilities.csproj" />
+    <ProjectReference Include="..\WebApplication_MVC\WebApplication_MVC.csproj" />
   </ItemGroup>
 
 </Project>

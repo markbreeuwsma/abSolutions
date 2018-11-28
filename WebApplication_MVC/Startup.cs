@@ -37,6 +37,13 @@ namespace WebApplication_MVC
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            // Setup dependency injection for localization by use of IStringLocalizer<T> for the controller classes
+            // who can then retrieve information per localization PER CONTROLLER. The accessor will try to look up
+            // a dictionairy key in the file <ResourcePath>/Controller.<ControllerName>.<language>.resx or subdirectory
+            // <ResourcePath>/Controller/<ControllerName>.<language>.resx. If not found it will return the key as string,
+            // which allows to develop the app initially without worrying to much about adding resources.
+            //services.AddLocalization(options => { options.ResourcesPath = "Resources"; });
+
             // Setup dependency injection of a repository, so that controles can make use of these repositories
             // by accepting them in the constructor, while the generic setup and control of the scope is done
             // by the container. In turn the repository will take the below setup service for a DbContext into 

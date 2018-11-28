@@ -1,47 +1,71 @@
-﻿@model IEnumerable<WebApplication_MVC.Models.FieldOfInterestView>
+﻿@model PaginatedList<WebApplication_MVC.Models.FieldOfInterestView>
 
 @{
     ViewData["Title"] = "Index";
 }
 
 <h2>Index</h2>
-
+<p class="text-danger">@TempData["RedirectMessage"]</p>
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+@{ 
+    var searchFocused = String.IsNullOrEmpty((string)ViewData["CurrentSearchString"]) ? "" : "autofocus onfocus=this.select();";
+}
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Search: <input type="text" name="SearchString" value="@ViewData["CurrentSearchString"]" title="Search for text in either field or description" class="form-control" style="display: inline-block; width:25%;" @searchFocused />
+            <input type="submit" value="Search" class="btn btn-default" /> |
+            <a asp-action="Index">Back to Full List</a>
+        </p>
+    </div>
+</form>
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.FieldOfInterestId)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["FieldOfInterestIdSortParm"]" asp-route-currentSearchString="@ViewData["CurrentSearchString"]">Field of interest</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["DescriptionSortParm"]" asp-route-currentSearchString="@ViewData["CurrentSearchString"]">Description</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Created)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["CreatedSortParm"]" asp-route-currentSearchString="@ViewData["CurrentSearchString"]">Created</a>
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FieldOfInterestId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Created)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.FieldOfInterestId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.FieldOfInterestId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.FieldOfInterestId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FieldOfInterestId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Created)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.FieldOfInterestId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.FieldOfInterestId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.FieldOfInterestId">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSortOrder"]" asp-route-currentSearchString="@ViewData["CurrentSearchString"]"   
+   asp-route-page="@(Model.PageIndex - 1)" class="btn btn-default @prevDisabled">Previous</a>
+<a asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSortOrder"]" asp-route-currentSearchString="@ViewData["CurrentSearchString"]"
+   asp-route-page="@(Model.PageIndex + 1)" class="btn btn-default @nextDisabled">Next</a>

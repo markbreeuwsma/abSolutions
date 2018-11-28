@@ -1,7 +1,7 @@
 ﻿@model WebApplication_MVC.Models.FieldOfInterestView
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create " + @Html.DisplayNameFor(model => model.FieldOfInterestId);
 }
 
 <h2>Create</h2>
@@ -14,7 +14,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="FieldOfInterestId" class="control-label"></label>
-                <input asp-for="FieldOfInterestId" class="form-control" style="text-transform:uppercase" />
+                <input asp-for="FieldOfInterestId" class="form-control" autofocus onfocus="this.select();"/>
                 <span asp-validation-for="FieldOfInterestId" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -24,14 +24,11 @@
             </div>
             <input type="hidden" asp-for="LanguageId" />
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Create" class="btn btn-default" /> |
+                <a asp-action="Index">Back to List</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

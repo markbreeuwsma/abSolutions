@@ -63,14 +63,21 @@ namespace DatabaseModel
         // See http://www.entityframeworktutorial.net/efcore/fluent-api-in-entity-framework-core.aspx for a complete list
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Blog>().HasIndex(x => new { x.Created, x.BlogId })                
-                                       .IsUnique();
+            modelBuilder.Entity<Blog>()
+                        .ToTable(nameof(Blog));
+            modelBuilder.Entity<Blog>()
+                        .HasIndex(x => new { x.Created, x.BlogId })                
+                        .IsUnique();
 
-            modelBuilder.Entity<Blog>().Property(x => x.Description)
-                                       .HasColumnName("Description")
-                                       .HasColumnType("nvarchar")
-                                       .HasMaxLength(80)
-                                       .IsRequired();
+            modelBuilder.Entity<Blog>()
+                        .Property(x => x.Description)
+                        .HasColumnName("Description")
+                        .HasColumnType("nvarchar")
+                        .HasMaxLength(80)
+                        .IsRequired();
+
+            modelBuilder.Entity<Post>()
+                        .ToTable(nameof(Post));
 
             // This one-to-many connection is already configured due to the EF naming conventions, however this is how Fluent API would do it
             // Map a one-to-many connection where a post links to one specific blog and a blog links to many posts
@@ -92,9 +99,13 @@ namespace DatabaseModel
             // setup two one-to-many mappings from that new entity class to the original classes (check documentation)
 
             modelBuilder.Entity<Address>()
+                        .ToTable(nameof(Address));
+            modelBuilder.Entity<Address>()
                         .Property(x => x.CountryId)
                         .HasMaxLength(2);
 
+            modelBuilder.Entity<Contact>()
+                        .ToTable(nameof(Contact));
             modelBuilder.Entity<Contact>()
                         .Property(x => x.Created)
                         .ValueGeneratedOnAdd();
@@ -127,10 +138,14 @@ namespace DatabaseModel
             //            .OwnsOne<Address>(x => x.PostalAddress);
 
             modelBuilder.Entity<Country>()
+                        .ToTable(nameof(Country));
+            modelBuilder.Entity<Country>()
                         .Property(x => x.CountryId)
                         .ValueGeneratedNever()
                         .HasMaxLength(2);
 
+            modelBuilder.Entity<CountryDescription>()
+                        .ToTable(nameof(CountryDescription));
             modelBuilder.Entity<CountryDescription>()
                         .Property(x => x.CountryId)
                         .HasMaxLength(2)
@@ -155,6 +170,8 @@ namespace DatabaseModel
                         .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<FieldOfInterest>()
+                        .ToTable(nameof(FieldOfInterest));
+            modelBuilder.Entity<FieldOfInterest>()
                         .Property(x => x.FieldOfInterestId)
                         .ValueGeneratedNever()
                         .HasMaxLength(5);
@@ -166,9 +183,18 @@ namespace DatabaseModel
                         .ValueGeneratedOnAdd()
                         .IsRequired();
             modelBuilder.Entity<FieldOfInterest>()
+                        .Property(x => x.Updated)
+                        .ValueGeneratedOnUpdate();
+            modelBuilder.Entity<FieldOfInterest>()
+                        .Property(x => x.UpdatedBy)
+                        .ValueGeneratedOnUpdate()
+                        .IsRequired();
+            modelBuilder.Entity<FieldOfInterest>()
                         .Property(x => x.RowVersion)
                         .IsRowVersion();
 
+            modelBuilder.Entity<FieldOfInterestDescription>()
+                        .ToTable(nameof(FieldOfInterestDescription));
             modelBuilder.Entity<FieldOfInterestDescription>()
                         .Property(x => x.FieldOfInterestId)
                         .HasMaxLength(5)

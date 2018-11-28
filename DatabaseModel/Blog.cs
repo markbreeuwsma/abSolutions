@@ -75,6 +75,12 @@ namespace DatabaseModel
     {
         public Blog()
         {
+            // initializing navigation collection so it is not NULL not needed perse while using EF with lazy loading 
+            // strategy, which uses a proxy class to achieve this. A reason to do do it, is when also accessing the 
+            // entity outside EF, like for testing and want to easily avoid NULL checks and exceptions. Another reason
+            // might be the need of an List<T> or other type where EF will always use a HashSet<T>.
+            // TIP: Could also be achieved by adding lazy loading in this entity to the getter of the property.
+
             this.Posts = new HashSet<Post>();
         }
          
@@ -99,6 +105,8 @@ namespace DatabaseModel
         public int PostCounter { get; set; }
 
         // the virtual keyword allows for lazy loading of the Posts related to this blog
+        // alternative with a lazy loading getter which then can be removed from the constructor
+        // public virtual ICollection<Post> Posts { get => (Posts ?? (Descriptions = new HashSet<Post>())); set => Posts = value; }
         public virtual ICollection<Post> Posts { get; set; }
     }
 }

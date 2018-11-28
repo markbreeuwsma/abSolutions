@@ -9,6 +9,8 @@ namespace WebApplication_MVC.Models
         Task<T> ReadAsync(K id);
         Task<IEnumerable<T>> ReadAllAsync();
 
+        Task<T> RetrieveOriginalValuesAsync(T t);
+
         bool CreateValid(T t);
         Task<T> CreateAsync(T t);
 

@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <Compile Remove="Migrations\20181108142403_AddedFieldsOfInterest.cs" />
+    <Compile Remove="Migrations\20181126185513_RenamedToSingular.cs" />
   </ItemGroup>
 
   <ItemGroup>

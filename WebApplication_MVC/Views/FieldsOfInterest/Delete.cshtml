@@ -1,8 +1,7 @@
 ﻿@model WebApplication_MVC.Models.FieldOfInterestView
 
 @{
-    ViewData["Title"] = "Delete";
-}
+    ViewData["Title"] = "Delete " + @Html.DisplayNameFor(model => model.FieldOfInterestId) + " " + Model.FieldOfInterestId + ": " + Model.Description;}
 
 <h2>Delete</h2>
 <p class="text-danger">@ViewData["ErrorMessage"]</p>
@@ -33,7 +32,10 @@
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="FieldOfInterestId" />
-        <input type="submit" value="Delete" class="btn btn-default" /> |
-        <a asp-action="Index">Back to List</a>
+        <input type="hidden" asp-for="RowVersion" />
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            <a asp-action="Index">Back to List</a>
+        </div>
     </form>
 </div>

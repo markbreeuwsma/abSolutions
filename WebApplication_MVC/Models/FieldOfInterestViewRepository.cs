@@ -44,8 +44,8 @@ namespace WebApplication_MVC.Models
 
             await _context.FieldsOfInterest.Include(x => x.Descriptions)
                           .AsNoTracking()
-                          .ForEachAsync(field => viewFields.Add(MapToFieldOfInterestView(field)));                         
-            
+                          .ForEachAsync(field => viewFields.Add(MapToFieldOfInterestView(field)));
+
             return viewFields;
         }
 
@@ -60,7 +60,10 @@ namespace WebApplication_MVC.Models
                             LanguageId = languageId,
                             Description = description,
                             Created = field.Created,
-                            CreatedBy = field.CreatedBy
+                            CreatedBy = field.CreatedBy,
+                            Updated = field.Updated,
+                            UpdatedBy = field.UpdatedBy,
+                            RowVersion = field.RowVersion
                         };
         }
 
@@ -70,7 +73,10 @@ namespace WebApplication_MVC.Models
                         {
                             FieldOfInterestId = field.FieldOfInterestId,
                             Created = field.Created,
-                            CreatedBy = field.CreatedBy
+                            CreatedBy = field.CreatedBy,
+                            Updated = field.Updated,
+                            UpdatedBy = field.UpdatedBy,
+                            RowVersion = field.RowVersion
                         };
         }
 
@@ -82,6 +88,47 @@ namespace WebApplication_MVC.Models
                             LanguageId = field.LanguageId,
                             Description = field.Description
                         };
+        }
+
+        public async Task<FieldOfInterestView> RetrieveOriginalValuesAsync(FieldOfInterestView field)
+        {
+            var entityField = new FieldOfInterest() { FieldOfInterestId = field.FieldOfInterestId };
+            var entityFieldDescription = new FieldOfInterestDescription() { FieldOfInterestId = field.FieldOfInterestId, LanguageId = field.LanguageId };
+
+            var originalValues = await _context.Entry(entityField).GetDatabaseValuesAsync();
+            if (originalValues == null)
+            {
+                return null;
+            }
+
+            var originalField = (FieldOfInterest)originalValues.ToObject();
+
+            // retrieving the description dont work on detached / not-tracked entities (like originalField) when using EF lazy loading
+            // originalField.Descriptions.Add((FieldOfInterestDescription)_context.Entry(entityFieldDescription).GetDatabaseValues().ToObject());
+            // return MapToFieldOfInterestView(originalField);
+
+            var originalValuesDescription = await _context.Entry(entityFieldDescription).GetDatabaseValuesAsync();
+            FieldOfInterestDescription originalFieldDescription;
+            if (originalValuesDescription == null)
+            {
+                originalFieldDescription = new FieldOfInterestDescription();
+            }
+            else
+            {
+                originalFieldDescription = (FieldOfInterestDescription)originalValuesDescription.ToObject();
+            }
+
+            return new FieldOfInterestView
+                    {
+                        FieldOfInterestId = field.FieldOfInterestId,
+                        LanguageId = field.LanguageId,
+                        Description = originalFieldDescription.Description,
+                        Created = originalField.Created,
+                        CreatedBy = originalField.CreatedBy,
+                        Updated = originalField.Updated,
+                        UpdatedBy = originalField.UpdatedBy,
+                        RowVersion = originalField.RowVersion
+                    };
         }
 
         public bool CreateValid(FieldOfInterestView field) //, bool checkExist = true)
@@ -114,6 +161,7 @@ namespace WebApplication_MVC.Models
             {
                 throw new InvalidOperationException();
             }
+
             await _context.FieldsOfInterest.AddAsync(MapToFieldOfInterest(field));
             if (!String.IsNullOrEmpty(field.Description))
             {
@@ -136,13 +184,20 @@ namespace WebApplication_MVC.Models
             }
 
             var fieldOfInterest = await _context.FieldsOfInterest.FirstOrDefaultAsync(x => (x.FieldOfInterestId == field.FieldOfInterestId));
-            if (fieldOfInterest == null)
+            if (fieldOfInterest == null) // || fieldOfInterest.RowVersion != field.RowVersion)
             {
-                // TODO: throw a better exception
+                // TODO: throw a better exception, using the context when save changes throws an concurrency error
                 throw new InvalidOperationException();
-                //throw new DbUpdateConcurrencyException($"Field of interest {field.FieldOfInterestId} no longer exists", ...);
-            }           
-            //fieldOfInterest.xxx = field.xxx;
+                //throw new DbUpdateConcurrencyException($"Field of interest {field.FieldOfInterestId} no longer exists", _context.Entry<FieldOfInterest>);
+            }
+            // force context to update record info (cannot be primairy key field)
+            _context.Entry(fieldOfInterest).Property(nameof(FieldOfInterest.Updated)).IsModified = true;
+            // set rowversion to originally retrieved value to allow for concurrency check
+            _context.Entry(fieldOfInterest).Property(nameof(FieldOfInterest.RowVersion)).OriginalValue = field.RowVersion;
+
+            fieldOfInterest.Updated = DateTime.Now;
+            fieldOfInterest.UpdatedBy = "Anonymous";   //TODO retrieve user name
+            //fieldOfInterest.xxx = field.xxx;  // set other changed fields with updated values when present
 
             var fieldOfInterestDescription = await _context.FieldOfInterestDescriptions.FirstOrDefaultAsync(x => (x.FieldOfInterestId == field.FieldOfInterestId && x.LanguageId == field.LanguageId));
             if (fieldOfInterestDescription == null)
@@ -181,11 +236,13 @@ namespace WebApplication_MVC.Models
             }
 
             var fieldOfInterest = await _context.FieldsOfInterest.FirstOrDefaultAsync(x => (x.FieldOfInterestId == field.FieldOfInterestId));
-            if (fieldOfInterest == null)
+            if (fieldOfInterest == null) // || fieldOfInterest.RowVersion != field.RowVersion)
             {
                 // TODO: return not found/unknown error
                 throw new InvalidOperationException();
             }
+            // set rowversion to originally retrieved value to allow for concurrency check
+            _context.Entry(fieldOfInterest).Property(nameof(FieldOfInterest.RowVersion)).OriginalValue = field.RowVersion;
 
             // delete main record
             _context.FieldsOfInterest.Remove(fieldOfInterest);
