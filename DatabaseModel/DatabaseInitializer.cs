@@ -30,9 +30,9 @@ namespace DatabaseModel
             if (!context.FieldsOfInterest.Any())
             {
                 context.FieldsOfInterest.AddRange(
-                    new FieldOfInterest { FieldOfInterestId = "01", Created = DateTime.Parse("2018-10-01"), CreatedBy = "Anonymous" },
-                    new FieldOfInterest { FieldOfInterestId = "02", Created = DateTime.Parse("2018-10-02"), CreatedBy = "Anonymous" },
-                    new FieldOfInterest { FieldOfInterestId = "03", Created = DateTime.Parse("2018-11-01"), CreatedBy = "Anonymous" });
+                    new FieldOfInterest { FieldOfInterestId = "01", Created = DateTime.Parse("2018-10-01"), CreatedBy = "Anonymous", UpdatedBy = "" },
+                    new FieldOfInterest { FieldOfInterestId = "02", Created = DateTime.Parse("2018-10-02"), CreatedBy = "Anonymous", UpdatedBy = "" },
+                    new FieldOfInterest { FieldOfInterestId = "03", Created = DateTime.Parse("2018-11-01"), CreatedBy = "Anonymous", UpdatedBy = "" });
 
                 context.FieldOfInterestDescriptions.AddRange(
                     new FieldOfInterestDescription { FieldOfInterestId = "01", LanguageId = "NL", Description = "Interesse 01" },

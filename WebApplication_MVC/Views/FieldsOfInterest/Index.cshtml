@@ -69,3 +69,6 @@
    asp-route-page="@(Model.PageIndex - 1)" class="btn btn-default @prevDisabled">Previous</a>
 <a asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSortOrder"]" asp-route-currentSearchString="@ViewData["CurrentSearchString"]"
    asp-route-page="@(Model.PageIndex + 1)" class="btn btn-default @nextDisabled">Next</a>
+
+<my-table items="@Model" class="table"></my-table>
+

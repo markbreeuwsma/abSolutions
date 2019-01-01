@@ -137,9 +137,7 @@ namespace WebApplication_MVC.Controllers
         // GET: FieldsOfInterest/Create
         public IActionResult Create()
         {
-            FieldOfInterestView field = new FieldOfInterestView();
-
-            return View(field);
+            return View(new FieldOfInterestView());
         }
 
         // POST: FieldsOfInterest/Create
@@ -241,7 +239,7 @@ namespace WebApplication_MVC.Controllers
 
             if (concurrencyError)
             {
-                var fieldInDatabase = await _repo.RetrieveOriginalValuesAsync(fieldToUpdate);
+                var fieldInDatabase = await _repo.RetrieveOriginalValuesAsync(fieldToUpdate); 
 
                 // TODO: retrieve error message from page, size save might not be called Save
                 ModelState.AddModelError("", ErrorMessage.DatabaseUpdateConcurrencyError);

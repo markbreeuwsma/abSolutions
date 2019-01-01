@@ -2,6 +2,11 @@
 
 namespace DatabaseModel
 {
+    // DbContext as a whole is an implementation of Unit of Work, while the DbSet per entity is an
+    // implementation of a repository for that entity. This does not mean it isn't still needed to
+    // create own repositories to hide away data access from business logic (e.g. to hide specific
+    // query implementations) which builds on the DbSet and DbContext.
+    // DTO's (Data Transfer Objects) are used to communicate data between for example views and repos.
     public class DatabaseContext : DbContext
     {
         // Current method for creating database and context is done using code first approach,
@@ -51,6 +56,8 @@ namespace DatabaseModel
         // startup.cs of the WebApplication_MVC project
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
+        //    if (!optionsBuilder.IsConfigured)  // do something only if not yet configered, eq for testing
+        //    { ... }
         //}
 
         // The database model derived from the classes can be influenced by adding either data 
@@ -216,7 +223,7 @@ namespace DatabaseModel
                         .HasOne<FieldOfInterest>(x => x.FieldOfInterest)
                         .WithMany(x => x.Descriptions)
                         .HasForeignKey(x => x.FieldOfInterestId)
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade);  // cascade: when field is deleted, tracked fielddescriptions will also be deleted
         }
 
         // This function could be used to extend the implementation of SaveChanges to add additional
